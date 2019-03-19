@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: eva
- * Date: 04/10/18
- * Time: 19:16
- */
 
 namespace App\Controller;
 
@@ -14,21 +8,36 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CurriculumVitae
 {
+    /** @var GenerateWordService */
+    private $generateWordService;
+
+
+    public function __construct(GenerateWordService $generator)
+    {
+        $this->generateWordService = $generator;
+    }
 
     /**
-     * @Route("generate-curriculum-vitae", name="generate_curriculum_vitae")
-     * @throws \Exception
+     * @Route("/generate-curriculum-vitae", name="generate_curriculum_vitae")
+     * @param string $template nom du template a utilisé.
+     * @param array $data données récupéré depuis le formulaire afin de compléter le cv
+     *
+     * @return JsonResponse
      */
     public function generateCurriculumVitae()
     {
-        $generateWordService = new GenerateWordService();
-
-        $content = $generateWordService->getContentHtml('ER_CV.html');
-        $content = $generateWordService->addDataInTemplateHtml($content);
-        $generateWordService->createDocFile($content);
+        $template = 'simple_template';
+        $data = ['TRIGRAMME'=>'FRE', 'POSTE'=> 'Chirurgien'];
+        $fileName = 'FRE_CV';
+        $this->generateWordService
+            ->setTemplate($template)
+            ->replaceVarInData($data)
+            ->generateInDoc($fileName);
 
         return new JsonResponse(
             ['hello']
         );
     }
+
+
 }

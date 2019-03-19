@@ -9,48 +9,55 @@
 namespace App\Service;
 
 
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\Finder\Finder;
+
 class GenerateWordService
 {
-    /**
-     * @param $pathFile
-     * @return bool|string
-     * @throws \Exception
-     */
-    public function getContentHtml($pathFile)
+    private $templatePathFile = '/html/template.html';
+    private $htmlFile;
+
+    public function setTemplate($templateName)
     {
-        if(is_file($pathFile)){
-            return file_get_contents($pathFile);
+        $this->templatePathFile = '/html/'. $templateName . '.html';
+        return $this;
+    }
+
+
+    public function replaceVarInData($data)
+    {
+        //récupère le fichier
+        if(file_exists($_SERVER['DOCUMENT_ROOT'] . $this->templatePathFile) === false){
+            throw new FileNotFoundException;
         }
-        throw new \ErrorException('pas de fichier');
+        $this->htmlFile = file_get_contents($_SERVER['DOCUMENT_ROOT'] . $this->templatePathFile, true);
+
+        //transforme  les valeurs
+        foreach ($data as $key => $value){
+            $this->htmlFile = str_replace("##$key##", $value, $this->htmlFile);
+        }
+        return $this;
     }
 
-    /**
-     * Ajoute les données dans le template word
-     */
-    public function addDataInTemplateHtml($content)
+    //upload
+    public function generateInDoc($fileName)
     {
-        $content = str_replace('##NOM##', 'Roux', $content);
-        $content = str_replace('##PRENOM##', 'EVA', $content);
-        $content = str_replace('##EXPERIENCE##', 'mon experience', $content);
-
-        return $content;
-    }
-
-    /**
-     * @param $content
-     */
-    public function createDocFile($content)
-    {
-        $filename = "ER_CV.doc";
-        if (!$handle = fopen($filename, 'w')) {
-            exit("Impossible d'ouvrir le fichier ($filename)");
+        $filepath = $_SERVER['DOCUMENT_ROOT'] .  "/doc/$fileName.doc";
+        if (!$handle = fopen($filepath, 'w')) {
+            exit("Impossible d'ouvrir le fichier ($filepath)");
         }
 
         // On ajoute le contenu
-        if (fwrite($handle, $content) === FALSE) {
-            exit("Impossible d'écrire dans le fichier ($filename)");
+        if (fwrite($handle, $this->htmlFile) === FALSE) {
+            exit("Impossible d'écrire dans le fichier ($filepath)");
         }
 
         fclose($handle);
+    }
+
+    //upload
+    public function getHtml()
+    {
+        return $this->htmlFile;
     }
 }
