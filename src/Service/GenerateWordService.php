@@ -9,8 +9,19 @@
 namespace App\Service;
 
 
+use App\Entity\SkillCategories;
+use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+
 class GenerateWordService
 {
+
+    private $objectManager;
+
+    public function __construct(ObjectManager $objectManager)
+    {
+        $this->objectManager = $objectManager;
+    }
     /**
      * @param $pathFile
      * @return bool|string
@@ -21,9 +32,15 @@ class GenerateWordService
         if(is_file($pathFile)){
             return file_get_contents($pathFile);
         }
-        throw new \ErrorException('pas de fichier');
+        throw new FileException();
     }
 
+    public function getSkillCategories()
+    {
+        $skillCategoriesRepository = $this->objectManager
+            ->getRepository(SkillCategories::class);
+        return $skillCategoriesRepository->find(1);
+    }
     /**
      * Ajoute les données dans le template word
      */

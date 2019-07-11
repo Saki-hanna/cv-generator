@@ -9,12 +9,16 @@
         "symfony/console": "*",
         "symfony/flex": "^1.1",
         "symfony/framework-bundle": "*",
-        "symfony/yaml": "*"
+        "symfony/orm-pack": "^1.0",
+        "symfony/yaml": "*",
+        "twig/twig": "^2.0"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.2",
         "symfony/dotenv": "*",
         "symfony/maker-bundle": "^1.7",
-        "symfony/phpunit-bridge": "*"
+        "symfony/phpunit-bridge": "*",
+        "symfony/var-dumper": "*"
     },
     "config": {
         "preferred-install": {
