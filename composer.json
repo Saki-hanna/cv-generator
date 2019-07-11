@@ -7,14 +7,19 @@
         "ext-iconv": "*",
         "sensio/framework-extra-bundle": "^5.2",
         "symfony/console": "*",
+        "symfony/filesystem": "4.2.*",
+        "symfony/finder": "4.2.*",
         "symfony/flex": "^1.1",
         "symfony/framework-bundle": "*",
         "symfony/yaml": "*"
     },
     "require-dev": {
+        "symfony/browser-kit": "4.2.*",
+        "symfony/css-selector": "4.2.*",
         "symfony/dotenv": "*",
         "symfony/maker-bundle": "^1.7",
-        "symfony/phpunit-bridge": "*"
+        "symfony/phpunit-bridge": "*",
+        "symfony/var-dumper": "4.2.*"
     },
     "config": {
         "preferred-install": {
@@ -58,7 +63,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.1.*"
+            "require": "4.2.*"
         }
     }
 }
